@@ -65,5 +65,5 @@ worksheet = None
 if worksheet is None:
     worksheet = login_open_sheet(GDOCS_OAUTH_JSON, GDOCS_SPREADSHEET_NAME)
 
-print sniff(prn=arp_display, filter="(udp and (port 67 or 68))", store=0, count=0)
+print sniff(prn=arp_display, filter="(udp and (port 67 or 68))", store=0, count=1)
 
