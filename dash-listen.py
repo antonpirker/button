@@ -39,7 +39,7 @@ def login_open_sheet(oauth_key_file, spreadsheet):
 def record_message(message):
     vienna = pytz.timezone('Europe/Vienna')
     timestamp = datetime.now(vienna)
-    values = [timestamp, message]
+    values = [timestamp.strftime('%Y-%m-%d %H:%M'), message]
     worksheet.insert_row(values, 2)
 
 
