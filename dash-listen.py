@@ -1,4 +1,7 @@
 #!/usr/bin/python
+# coding=UTF-8
+
+from __future__ import unicode_literals
 
 import json
 import pytz
@@ -20,6 +23,10 @@ GDOCS_OAUTH_JSON = 'keys/baby-tracking-7eb0941024f8.json' # this was optained fr
 DASH_SOMAT = 'ac:63:be:c6:5b:8d'
 DASH_PERSIL = 'ac:63:be:da:1f:7a'
 
+MESSAGES = {
+    DASH_SOMAT: 'Ich bin munter!',
+    DASH_PERSIL: 'Was ominöses ist passiert!',
+}
 
 def login_open_sheet(oauth_key_file, spreadsheet):
     try:
@@ -43,18 +50,16 @@ def record_message(message):
     worksheet.insert_row(values, 2)
 
 
-def arp_display(pkt):
+def handle_button_press(pkt):
     if pkt.haslayer(DHCP):
-        if pkt[Ether].src == DASH_SOMAT:
-            print "Aufgewacht"
-            record_message('Aufgewacht')
+        try:
+            key = pkt[Ether].src
+            message = MESSAGES[key]
+            print(message)
+            record_message(message)
 
-        elif pkt[Ether].src == DASH_PERSIL:
-            print "In die Windeln gemacht"
-            record_message('In die Windeln gemacht')
-
-        else:
-            print "BOOTP from other device: %s" % pkt[Ether].src
+        except KeyError:
+            print("BOOTP from other device: %s" % pkt[Ether].src)
 
 
 print('Logging Amazon Dash Button presses to {0}.'.format(GDOCS_SPREADSHEET_NAME))
@@ -65,5 +70,5 @@ worksheet = None
 if worksheet is None:
     worksheet = login_open_sheet(GDOCS_OAUTH_JSON, GDOCS_SPREADSHEET_NAME)
 
-print sniff(prn=arp_display, filter="(udp and (port 67 or 68))", store=0, count=1)
+print sniff(prn=handle_button_press, filter="(udp and (port 67 or 68))", store=0, count=1)
 
