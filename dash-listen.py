@@ -25,7 +25,7 @@ DASH_PERSIL = 'ac:63:be:da:1f:7a'
 
 MESSAGES = {
     DASH_SOMAT: 'Ich bin munter!',
-    DASH_PERSIL: 'Was ominöses ist passiert!',
+    DASH_PERSIL: 'Was komisches ist passiert!',
 }
 
 def login_open_sheet(oauth_key_file, spreadsheet):
