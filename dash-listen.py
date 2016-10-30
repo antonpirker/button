@@ -2,6 +2,7 @@
 
 import json
 import pytz
+import os
 import sys
 import time
 import datetime
@@ -11,9 +12,10 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 from scapy.all import *
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 GDOCS_SPREADSHEET_NAME = 'Baby Tracking'
-GDOCS_OAUTH_JSON = 'baby-tracking-7eb0941024f8.json' # this was optained from https://console.developers.google.com/apis/api?project=baby-tracking
+GDOCS_OAUTH_JSON = 'keys/baby-tracking-7eb0941024f8.json' # this was optained from https://console.developers.google.com/apis/api?project=baby-tracking
 
 DASH_SOMAT = 'ac:63:be:c6:5b:8d'
 DASH_PERSIL = 'ac:63:be:da:1f:7a'
@@ -21,7 +23,7 @@ DASH_PERSIL = 'ac:63:be:da:1f:7a'
 
 def login_open_sheet(oauth_key_file, spreadsheet):
     try:
-        json_key = json.load(open(oauth_key_file))
+        json_key = json.load(open(os.path.join(BASE_DIR, oauth_key_file)))
         scope = ['https://spreadsheets.google.com/feeds']
         credentials = ServiceAccountCredentials.from_json_keyfile_name(oauth_key_file, scope)
 
