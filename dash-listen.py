@@ -22,10 +22,14 @@ GDOCS_OAUTH_JSON = 'keys/baby-tracking-7eb0941024f8.json' # this was optained fr
 
 DASH_SOMAT = 'ac:63:be:c6:5b:8d'
 DASH_PERSIL = 'ac:63:be:da:1f:7a'
+DASH_PLAYDOH = 'ac:63:be:b0:0a:6c'
+DASH_BIOZENTRALE = 'ac:63:be:0d:7e:a8'
 
 MESSAGES = {
     DASH_SOMAT: 'Ich bin munter!',
     DASH_PERSIL: 'Was komisches ist passiert!',
+    DASH_PLAYDOH: 'It is playdoh time!',
+    DASH_BIOZENTRALE: 'Ich brauch was zu essen, jetzt!',
 }
 
 def login_open_sheet(oauth_key_file, spreadsheet):
