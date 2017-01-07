@@ -15,6 +15,13 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 from scapy.all import *
 
+import logging
+logging.basicConfig(filename='button.log',
+    level=logging.INFO,
+    format='%(asctime)s %(levelname)s %(message)s %(filename)s:%(lineno)d')
+logger = logging.getLogger(__file__)
+
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 GDOCS_SPREADSHEET_NAME = 'Baby Tracking'
@@ -38,8 +45,8 @@ def login_open_sheet(oauth_key_file, spreadsheet):
         worksheet = gc.open(spreadsheet).sheet1
         return worksheet
     except Exception as ex:
-        print('Unable to login and get spreadsheet.  Check OAuth credentials, spreadsheet name, and make sure spreadsheet is shared to the client_email address in the OAuth .json file!')
-        print('Google sheet login failed with error:', ex)
+        logging.error('Unable to login and get spreadsheet.  Check OAuth credentials, spreadsheet name, and make sure spreadsheet is shared to the client_email address in the OAuth .json file!')
+        logging.error('Google sheet login failed with error:', ex)
         sys.exit(1)
 
 
@@ -55,20 +62,23 @@ def handle_button_press(pkt):
         try:
             key = pkt[Ether].src
             message = MESSAGES[key]
-            print(message)
+            logging.info(message)
             record_message(message)
 
         except KeyError:
-            print("BOOTP from other device: %s" % pkt[Ether].src)
+            logging.info("BOOTP from other device: %s" % pkt[Ether].src)
 
 
-print('Logging Amazon Dash Button presses to {0}.'.format(GDOCS_SPREADSHEET_NAME))
-print('Press Ctrl-C to quit.')
+logging.info('Logging Amazon Dash Button presses to {0}.'.format(GDOCS_SPREADSHEET_NAME))
+logging.info('Press Ctrl-C to quit.')
 worksheet = None
 
 # Login if necessary.
 if worksheet is None:
     worksheet = login_open_sheet(GDOCS_OAUTH_JSON, GDOCS_SPREADSHEET_NAME)
 
-print sniff(prn=handle_button_press, filter="(udp and (port 67 or 68))", store=0, count=1)
-
+try:
+    response = sniff(prn=handle_button_press, filter="(udp and (port 67 or 68))", store=0, count=1)
+    logging.info(response)
+except:
+    logging.exception('')
